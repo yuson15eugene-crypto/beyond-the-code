@@ -1,0 +1,3235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Beyond the Code features real experiences, challenges, projects, and advice from Computer Science students at Lipa City Colleges.">
+<title>Beyond the Code | CS Student Stories</title>
+
+<script>
+function logoFallback(img) {
+    if (!img.dataset.retry) {
+        img.dataset.retry = "1";
+        img.src = "logo.png";
+        return;
+    }
+    var mark = document.createElement("span");
+    mark.className = "brand-mark";
+    mark.textContent = "</>";
+    img.replaceWith(mark);
+}
+</script>
+
+<style>
+@property --angle {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+}
+
+:root {
+    --bg: #06111d;
+    --panel: #0b1b2a;
+    --panel-light: #102538;
+    --cyan: #27c9ff;
+    --cyan-soft: #8de6ff;
+    --violet: #7c8cff;
+    --white: #edf7ff;
+    --muted: #a5b8ca;
+    --line: #20394d;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 85px;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--bg);
+    color: var(--white);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+a {
+    color: inherit;
+}
+
+button, input, textarea, select {
+    font: inherit;
+}
+
+button, a {
+    -webkit-tap-highlight-color: transparent;
+}
+
+button {
+    cursor: pointer;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+#bgCanvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+.progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    z-index: 70;
+}
+
+.progress span {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, var(--cyan), var(--violet), #ff7ad9);
+    box-shadow: 0 0 14px var(--cyan);
+}
+
+.cursor-glow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 440px;
+    height: 440px;
+    margin: -220px 0 0 -220px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(39, 201, 255, 0.13), transparent 62%);
+    mix-blend-mode: screen;
+    pointer-events: none;
+    z-index: 45;
+    opacity: 0;
+    transition: opacity 0.4s;
+}
+
+.cursor-glow.on {
+    opacity: 1;
+}
+
+.ticker, .hero, .section, .stats, footer {
+    position: relative;
+    z-index: 1;
+}
+
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding: 15px 7%;
+    background: rgba(6, 17, 29, 0.94);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--line);
+    animation: navDrop 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    transition: padding 0.3s, box-shadow 0.3s;
+}
+
+.navbar.scrolled {
+    padding-top: 9px;
+    padding-bottom: 9px;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.45);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.brand-logo {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    border-radius: 50%;
+    background: transparent;
+    padding: 1px;
+    display: block;
+    animation: logoFloat 4s ease-in-out infinite;
+    filter: drop-shadow(0 0 8px rgba(39, 201, 255, 0.35));
+    transition: transform 0.6s;
+}
+
+.brand:hover .brand-logo {
+    transform: rotate(360deg) scale(1.1);
+}
+
+.brand-mark {
+    color: var(--cyan);
+    font-size: 30px;
+    font-weight: 900;
+    animation: logoFloat 4s ease-in-out infinite;
+}
+
+.brand small {
+    display: block;
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 400;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.nav-links a {
+    position: relative;
+    color: #c6d6e5;
+    font-size: 13px;
+    text-decoration: none;
+    transition: color 0.25s;
+}
+
+.nav-links a:not(.nav-cta)::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--cyan), var(--violet));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s;
+}
+
+.nav-links a:not(.nav-cta):hover::after,
+.nav-links a:not(.nav-cta).active::after {
+    transform: scaleX(1);
+}
+
+.nav-links a:hover, .nav-links a.active {
+    color: var(--cyan);
+}
+
+.nav-cta, .btn {
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 9px;
+    border: 1px solid var(--cyan);
+    border-radius: 30px;
+    padding: 11px 20px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 700;
+    transition: transform 0.25s, background 0.25s, box-shadow 0.25s;
+}
+
+.nav-cta {
+    color: var(--cyan);
+    animation: pulseRing 2.4s infinite;
+}
+
+.btn-primary {
+    color: #04111b;
+    background: var(--cyan);
+    animation: pulseRing 2.8s infinite;
+}
+
+.btn-primary::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -120%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+    transform: skewX(-20deg);
+    animation: btnShine 4s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.btn-outline {
+    color: var(--white);
+    background: transparent;
+}
+
+.btn:hover, .nav-cta:hover {
+    transform: translateY(-3px);
+}
+
+.btn-primary:hover {
+    background: var(--cyan-soft);
+    box-shadow: 0 10px 30px rgba(39, 201, 255, 0.4);
+}
+
+.btn-outline:hover {
+    background: rgba(39, 201, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(39, 201, 255, 0.15);
+}
+
+.hero {
+    position: relative;
+    overflow: hidden;
+    min-height: 510px;
+    display: flex;
+    align-items: center;
+    padding: 85px 7%;
+    background:
+        radial-gradient(ellipse at 82% 45%, #10476b 0%, transparent 38%),
+        linear-gradient(115deg, #06111d 10%, #0b2032 60%, #06111d);
+    border-bottom: 1px solid var(--line);
+}
+
+.hero::before {
+    content: "</>";
+    position: absolute;
+    right: 8%;
+    top: 12%;
+    font-family: monospace;
+    font-size: clamp(120px, 22vw, 270px);
+    font-weight: 900;
+    color: rgba(39, 201, 255, 0.045);
+    animation: float 6s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(70px);
+    opacity: 0.45;
+    pointer-events: none;
+    animation: drift 14s ease-in-out infinite alternate;
+}
+
+.orb.o1 { width: 340px; height: 340px; background: #1aa3d6; left: -80px; top: -60px; }
+.orb.o2 { width: 300px; height: 300px; background: #4a52d6; right: 22%; bottom: -130px; animation-duration: 18s; }
+.orb.o3 { width: 220px; height: 220px; background: #27c9ff; right: 4%; top: 8%; animation-duration: 11s; }
+
+.hero-symbols {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.hero-symbols span {
+    position: absolute;
+    bottom: -50px;
+    font-family: monospace;
+    font-weight: 700;
+    color: rgba(39, 201, 255, 0.2);
+    opacity: 0;
+    animation: riseUp linear infinite;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 710px;
+}
+
+.hero-content > * {
+    animation: rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.hero-content > :nth-child(1) { animation-delay: 0.15s; }
+.hero-content > :nth-child(2) { animation-delay: 0.3s; }
+.hero-content > :nth-child(3) { animation-delay: 0.5s; }
+.hero-content > :nth-child(4) { animation-delay: 0.65s; }
+.hero-content > :nth-child(5) { animation-delay: 0.8s; }
+.hero-content > :nth-child(6) { animation-delay: 0.95s; }
+
+.eyebrow {
+    color: var(--cyan);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+}
+
+.hero .eyebrow::after,
+.section-heading .eyebrow::after,
+.featured-copy .eyebrow::after,
+.share-banner .eyebrow::after {
+    content: "_";
+    margin-left: 3px;
+    animation: blink 1s steps(2) infinite;
+}
+
+.hero h1 {
+    max-width: 750px;
+    font-size: clamp(43px, 7vw, 78px);
+    line-height: 1.03;
+    letter-spacing: -2px;
+    margin: 22px 0 18px;
+}
+
+.gradient-text {
+    background: linear-gradient(90deg, #27c9ff, #8de6ff, #7c8cff, #27c9ff);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shimmer 6s linear infinite;
+    filter: drop-shadow(0 0 18px rgba(39, 201, 255, 0.35));
+}
+
+.hero h2 {
+    font-size: clamp(17px, 2vw, 22px);
+    margin: 0 0 14px;
+}
+
+.caret {
+    display: inline-block;
+    width: 8px;
+    height: 1em;
+    margin-left: 3px;
+    vertical-align: -0.12em;
+    background: var(--cyan);
+    animation: blink 1s steps(2) infinite;
+}
+
+.hero p {
+    max-width: 570px;
+    color: var(--muted);
+    font-size: 16px;
+}
+
+.hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 28px;
+}
+
+.hero-note {
+    margin-top: 25px;
+    color: #8ba7be;
+    font-size: 12px;
+}
+
+.code-card {
+    position: absolute;
+    right: 7%;
+    top: 50%;
+    width: min(390px, 34vw);
+    margin-top: -125px;
+    z-index: 1;
+    background: rgba(8, 22, 34, 0.84);
+    border: 1px solid #28506a;
+    border-radius: 14px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45), 0 0 45px rgba(39, 201, 255, 0.14);
+    backdrop-filter: blur(6px);
+    animation: fadeIn 1s 0.5s both, floatCard 6s ease-in-out infinite;
+}
+
+.code-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 11px 14px;
+    border-bottom: 1px solid #1d3a50;
+}
+
+.code-bar i {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.code-bar i:nth-child(1) { background: #ff5f56; }
+.code-bar i:nth-child(2) { background: #ffbd2e; }
+.code-bar i:nth-child(3) { background: #27c93f; }
+
+.code-bar span {
+    margin-left: auto;
+    color: var(--muted);
+    font-size: 11px;
+    font-family: monospace;
+}
+
+.code-card pre {
+    margin: 0;
+    padding: 16px 18px 20px;
+    min-height: 195px;
+    white-space: pre-wrap;
+    color: #cfe6f5;
+    font: 13px/1.75 Consolas, "Courier New", monospace;
+}
+
+.code-card .k { color: #c792ea; }
+.code-card .s { color: #a5e075; }
+.code-card .f { color: #7fdbff; }
+.code-card .c { color: #5c7a92; font-style: italic; }
+.code-card .n { color: #f9a875; }
+
+.ticker {
+    display: flex;
+    overflow: hidden;
+    white-space: nowrap;
+    background: #0b2436;
+    border-bottom: 1px solid var(--line);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+
+.ticker-track {
+    display: flex;
+    gap: 36px;
+    padding: 13px 36px 13px 0;
+    flex-shrink: 0;
+    animation: ticker 40s linear infinite;
+}
+
+.ticker:hover .ticker-track {
+    animation-play-state: paused;
+}
+
+.ticker span {
+    color: var(--cyan);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-shadow: 0 0 12px rgba(39, 201, 255, 0.45);
+}
+
+.ticker span::before {
+    content: "◆";
+    margin-right: 10px;
+    opacity: 0.45;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    padding: 46px 7% 0;
+}
+
+.stat {
+    position: relative;
+    overflow: hidden;
+    padding: 24px 20px;
+    text-align: center;
+    background: linear-gradient(145deg, #0d2132, #091521);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+}
+
+.stat-icon {
+    display: inline-block;
+    color: var(--cyan);
+    font-size: 26px;
+    font-family: monospace;
+    font-weight: 900;
+    animation: iconBob 3s ease-in-out infinite;
+}
+
+.stat-num {
+    display: block;
+    margin: 4px 0 2px;
+    font-size: clamp(34px, 4vw, 46px);
+    font-weight: 900;
+    line-height: 1.1;
+    background: linear-gradient(90deg, var(--white), var(--cyan-soft));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.stat small {
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 0.5px;
+}
+
+.section {
+    padding: 76px 7%;
+}
+
+.section-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 25px;
+    margin-bottom: 32px;
+}
+
+.section-heading h2 {
+    margin: 8px 0;
+    font-size: clamp(27px, 4vw, 39px);
+    line-height: 1.2;
+}
+
+.section-heading h2::after {
+    content: "";
+    display: block;
+    width: 0;
+    height: 3px;
+    margin-top: 12px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--cyan), var(--violet), transparent);
+    transition: width 1.1s 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.reveal.visible .section-heading h2::after,
+.section-heading.reveal.visible h2::after {
+    width: 110px;
+}
+
+.section-heading p {
+    color: var(--muted);
+    margin: 0;
+    max-width: 600px;
+}
+
+.featured {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 35px;
+    align-items: center;
+}
+
+.featured-copy h2 {
+    font-size: clamp(34px, 4vw, 48px);
+    line-height: 1.12;
+    margin: 15px 0;
+}
+
+.featured-copy p {
+    color: var(--muted);
+}
+
+.feature-visual {
+    position: relative;
+    overflow: hidden;
+    min-height: 290px;
+    padding: 35px;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    background:
+        radial-gradient(circle at 75% 25%, #14618a, transparent 34%),
+        linear-gradient(140deg, #112b40, #07131f);
+    border: 1px solid #28506a;
+    border-radius: 18px;
+}
+
+.feature-visual::before {
+    content: "{ }";
+    position: absolute;
+    right: 20px;
+    top: 0;
+    color: rgba(39, 201, 255, 0.12);
+    font-size: 150px;
+    font-family: monospace;
+    font-weight: bold;
+    animation: float 7s ease-in-out infinite;
+}
+
+.quote-mark {
+    position: relative;
+    color: var(--cyan);
+    font-size: 48px;
+    line-height: 1;
+}
+
+.feature-visual blockquote {
+    position: relative;
+    margin: 10px 0;
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.feature-visual small {
+    color: var(--muted);
+}
+
+.dark-section {
+    background: rgba(8, 23, 36, 0.82);
+    border-top: 1px solid #142c40;
+    border-bottom: 1px solid #142c40;
+}
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 22px;
+}
+
+.filter-btn {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 25px;
+    background: transparent;
+    color: var(--muted);
+    padding: 9px 16px;
+    font-size: 12px;
+    transition: 0.25s;
+}
+
+.filter-btn:hover, .filter-btn.active {
+    background: var(--cyan);
+    color: #04111b;
+    border-color: var(--cyan);
+}
+
+.filter-btn.active {
+    animation: pulseRing 2.6s infinite;
+}
+
+.search-box {
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    padding: 13px 17px;
+    margin-bottom: 25px;
+    color: var(--white);
+    background: #0b1b2a;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    outline: none;
+    transition: max-width 0.4s, box-shadow 0.3s, border-color 0.3s;
+}
+
+.search-box:focus {
+    max-width: 540px;
+    box-shadow: 0 0 0 4px rgba(39, 201, 255, 0.14), 0 0 30px rgba(39, 201, 255, 0.2);
+}
+
+.search-box:focus, .field input:focus,
+.field textarea:focus, .field select:focus {
+    border-color: var(--cyan);
+}
+
+.student-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.student-card {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 25px;
+    background: linear-gradient(145deg, #0d2132, #091521);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    transition: transform 0.3s, border-color 0.3s;
+}
+
+.student-card:hover {
+    transform: translateY(-7px);
+    border-color: var(--cyan);
+    box-shadow: 0 20px 50px rgba(39, 201, 255, 0.12);
+}
+
+.student-top {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 18px;
+}
+
+.avatar {
+    position: relative;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 54px;
+    height: 54px;
+    border-radius: 15px;
+    background: #12334a;
+    border: 1px solid #24506a;
+    color: var(--cyan);
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.avatar::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: 18px;
+    border: 2px solid var(--cyan);
+    opacity: 0;
+    animation: ring 2.8s ease-out infinite;
+}
+
+.year-badge {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    background: #12334a;
+    color: var(--cyan);
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}
+
+.year-badge::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(141, 230, 255, 0.45), transparent);
+    animation: btnShine 3.6s ease-in-out infinite;
+}
+
+.student-card h3 {
+    margin: 7px 0 0;
+    font-size: 19px;
+}
+
+.student-card .course {
+    margin: 0;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.student-card blockquote {
+    margin: 0 0 20px;
+    color: #cbdbe9;
+    font-style: italic;
+    font-size: 14px;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.card-bottom {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.text-btn {
+    border: 0;
+    background: none;
+    color: var(--cyan);
+    padding: 5px 0;
+    font-size: 13px;
+    font-weight: 700;
+    transition: letter-spacing 0.25s;
+}
+
+.text-btn:hover {
+    text-decoration: underline;
+    letter-spacing: 0.4px;
+}
+
+.no-results {
+    grid-column: 1 / -1;
+    color: var(--muted);
+    padding: 30px 0;
+}
+
+.topic-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 13px;
+}
+
+.topic {
+    position: relative;
+    overflow: hidden;
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 22px 17px;
+    border: 1px solid var(--line);
+    border-radius: 13px;
+    background: #0a1a28;
+    color: var(--white);
+    transition: 0.25s;
+}
+
+.topic:hover {
+    border-color: var(--cyan);
+    background: #10293b;
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(39, 201, 255, 0.14);
+}
+
+.topic-icon {
+    display: block;
+    width: max-content;
+    font-size: 27px;
+    margin-bottom: 12px;
+    animation: iconBob 3s ease-in-out infinite;
+    animation-delay: calc(var(--i, 0) * 0.35s);
+}
+
+.topic:hover .topic-icon {
+    animation: iconSpin 0.8s ease;
+}
+
+.topic strong {
+    display: block;
+    font-size: 13px;
+}
+
+.topic small {
+    display: block;
+    color: var(--muted);
+    margin-top: 6px;
+    font-size: 11px;
+}
+
+.advice-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 17px;
+}
+
+.advice-card {
+    position: relative;
+    overflow: hidden;
+    background: #0b1c2b;
+    padding: 25px;
+    border-radius: 15px;
+    border: 1px solid var(--line);
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+.advice-card:hover {
+    border-color: var(--cyan);
+    box-shadow: 0 20px 50px rgba(39, 201, 255, 0.12);
+}
+
+.advice-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -70%;
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.07), transparent);
+    transform: skewX(-20deg);
+    animation: shine 7s ease-in-out infinite;
+    animation-delay: calc(var(--i, 0) * 1.4s);
+    pointer-events: none;
+}
+
+.advice-card .quote-mark {
+    display: inline-block;
+    font-size: 38px;
+    transform-origin: top left;
+    animation: swing 3.2s ease-in-out infinite;
+}
+
+.advice-card blockquote {
+    margin: 12px 0;
+    color: #d4e4f1;
+    font-size: 16px;
+    white-space: pre-line;
+}
+
+.advice-card .motto {
+    margin: 14px 0 6px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+    color: #d4e4f1;
+    font-size: 14px;
+    white-space: pre-line;
+}
+
+.advice-card .motto span {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--cyan);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.advice-card .motto em {
+    color: #d4e4f1;
+}
+
+.advice-card small {
+    color: var(--muted);
+}
+
+.share-banner {
+    position: relative;
+    overflow: hidden;
+    padding: 65px 25px;
+    text-align: center;
+    background:
+        radial-gradient(ellipse at 50% 110%, #104365, transparent 65%),
+        #07131f;
+    border: 1px solid #1c3c53;
+    border-radius: 18px;
+}
+
+.banner-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(50px);
+    opacity: 0.4;
+    pointer-events: none;
+    animation: drift 10s ease-in-out infinite alternate;
+}
+
+.banner-orb.b1 { width: 220px; height: 220px; background: #27c9ff; left: -50px; top: -60px; }
+.banner-orb.b2 { width: 240px; height: 240px; background: #6a5cff; right: -60px; bottom: -80px; animation-duration: 13s; }
+
+.share-banner > *:not(.banner-orb) {
+    position: relative;
+    z-index: 1;
+}
+
+.share-banner h2 {
+    margin: 12px 0;
+    font-size: clamp(30px, 5vw, 43px);
+}
+
+.share-banner p {
+    max-width: 590px;
+    margin: 0 auto 24px;
+    color: var(--muted);
+}
+
+.about-box {
+    position: relative;
+    padding: 26px 28px;
+    background: linear-gradient(145deg, rgba(13, 33, 50, 0.9), rgba(9, 21, 33, 0.9));
+    border: 1px solid #1d3d54;
+    border-radius: 16px;
+}
+
+.about-box p:first-child { margin-top: 0; }
+.about-box p:last-child { margin-bottom: 0; }
+
+footer {
+    padding: 35px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 22px;
+    border-top: 1px solid var(--line);
+    background: rgba(6, 17, 29, 0.9);
+}
+
+footer::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--cyan), var(--violet), transparent);
+    background-size: 200% 100%;
+    animation: sweep 4s linear infinite;
+}
+
+footer p, footer small {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 17px;
+}
+
+.footer-links a {
+    text-decoration: none;
+    font-size: 13px;
+    color: var(--muted);
+    transition: color 0.25s, transform 0.25s;
+}
+
+.footer-links a:hover {
+    color: var(--cyan);
+    transform: translateY(-3px);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.open {
+    display: flex;
+    animation: fadeIn 0.3s ease both;
+}
+
+.modal-content {
+    position: relative;
+    width: 100%;
+    max-width: 620px;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 32px;
+    background: #0b1b2a;
+    border: 1px solid #28506a;
+    border-radius: 18px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 60px rgba(39, 201, 255, 0.1);
+    animation: pop 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+
+.topic-modal-animation {
+    animation: topicSwitch 0.6s ease;
+}
+
+.topic-answer, .interview-answer {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line);
+    animation: slideIn 0.5s both;
+    animation-delay: calc(var(--i, 0) * 0.05s + 0.15s);
+}
+
+.topic-answer strong {
+    display: block;
+    color: var(--cyan);
+    margin-bottom: 5px;
+}
+
+.topic-answer p {
+    margin: 0;
+    color: var(--muted);
+}
+
+.close-modal {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: #102538;
+    color: white;
+    font-size: 21px;
+    transition: transform 0.35s, background 0.25s;
+}
+
+.close-modal:hover {
+    transform: rotate(90deg) scale(1.1);
+    background: #1a3f5a;
+}
+
+.modal-content h2 {
+    padding-right: 35px;
+    font-size: 28px;
+    line-height: 1.2;
+}
+
+.modal-content p {
+    color: var(--muted);
+}
+
+.interview-answer strong {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--cyan);
+}
+
+.qa-static .topic-answer,
+.qa-static .interview-answer {
+    animation: none;
+}
+
+.qa-row {
+    margin-top: 14px;
+}
+
+.qa-who {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--white);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+}
+
+.answer-text {
+    margin: 0;
+    color: var(--muted);
+    white-space: pre-wrap;
+}
+
+.answer-text.empty {
+    font-style: italic;
+    opacity: 0.55;
+}
+
+.edit-label {
+    display: block;
+    margin: 18px 0 6px;
+    color: var(--cyan);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.edit-input {
+    display: block;
+    width: 100%;
+    min-height: 72px;
+    padding: 11px 12px;
+    color: var(--white);
+    background: #06111d;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    outline: none;
+    resize: vertical;
+    line-height: 1.5;
+    transition: border-color 0.25s, box-shadow 0.25s;
+}
+
+input.edit-input {
+    min-height: 0;
+}
+
+.edit-input:focus {
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 3px rgba(39, 201, 255, 0.18);
+}
+
+.modal-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.save-status {
+    color: var(--cyan);
+    font-size: 12px;
+}
+
+.save-status.error {
+    color: #ff8a8a;
+}
+
+.backup-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 18px;
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+}
+
+.backup-row small {
+    flex-basis: 100%;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.form-grid {
+    display: grid;
+    gap: 17px;
+}
+
+.field label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 13px;
+    font-weight: 700;
+    transition: color 0.25s;
+}
+
+.field:focus-within label {
+    color: var(--cyan);
+}
+
+.field input, .field textarea, .field select {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    color: var(--white);
+    background: #06111d;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    outline: none;
+    transition: border-color 0.25s, box-shadow 0.25s;
+}
+
+.field input:focus, .field textarea:focus, .field select:focus {
+    box-shadow: 0 0 0 3px rgba(39, 201, 255, 0.18);
+}
+
+.field textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+.form-note {
+    font-size: 12px;
+}
+
+.form-message {
+    color: var(--cyan);
+    font-size: 13px;
+    margin-top: 15px;
+}
+
+.form-message.show {
+    animation: pop 0.5s both;
+}
+
+.form-message.show::before {
+    content: "✓ ";
+    font-weight: 900;
+}
+
+.fab {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    z-index: 60;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1px solid var(--cyan);
+    background: rgba(11, 27, 42, 0.92);
+    color: var(--cyan);
+    font-size: 20px;
+    opacity: 0;
+    pointer-events: none;
+    translate: 0 20px;
+    transition: opacity 0.3s, translate 0.3s, background 0.25s;
+}
+
+.fab.show {
+    opacity: 1;
+    pointer-events: auto;
+    translate: none;
+    animation: fabBounce 2.4s ease-in-out infinite;
+}
+
+.fab:hover {
+    background: var(--cyan);
+    color: #04111b;
+}
+
+.motion-toggle {
+    position: fixed;
+    left: 18px;
+    bottom: 22px;
+    z-index: 60;
+    padding: 9px 15px;
+    border-radius: 30px;
+    border: 1px solid var(--line);
+    background: rgba(11, 27, 42, 0.92);
+    color: var(--muted);
+    font-size: 12px;
+    transition: border-color 0.25s, color 0.25s;
+}
+
+.motion-toggle:hover {
+    border-color: var(--cyan);
+    color: var(--cyan);
+}
+
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.35);
+    transform: scale(0);
+    animation: rippleAnim 0.6s ease-out forwards;
+    pointer-events: none;
+}
+
+.confetti {
+    position: fixed;
+    width: 7px;
+    height: 7px;
+    border-radius: 2px;
+    pointer-events: none;
+    z-index: 200;
+    animation: confetti 0.9s ease-out forwards;
+}
+
+.glow-card {
+    isolation: isolate;
+}
+
+.glow-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s;
+    background: radial-gradient(280px circle at var(--mx, 50%) var(--my, 50%), rgba(39, 201, 255, 0.2), transparent 62%);
+}
+
+.glow-card:hover::after {
+    opacity: 1;
+}
+
+.feature-visual::after,
+.share-banner::before,
+.about-box::before,
+.student-card::before,
+.stat::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 2px;
+    pointer-events: none;
+    background: conic-gradient(from var(--angle), transparent 0 55%, var(--cyan) 76%, var(--violet) 90%, transparent 100%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    animation: spinAngle 4s linear infinite;
+}
+
+.student-card::before, .stat::before {
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.student-card:hover::before, .stat:hover::before {
+    opacity: 1;
+}
+
+.bob.reveal.visible {
+    animation: bob 6s ease-in-out infinite;
+    animation-delay: calc(var(--i, 0) * 0.5s + 1.2s);
+}
+
+.bob:hover {
+    animation-play-state: paused;
+}
+
+.reveal {
+    opacity: 0;
+    translate: 0 26px;
+    transition: opacity 0.7s ease, translate 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.reveal.from-left { translate: -45px 0; }
+.reveal.from-right { translate: 45px 0; }
+
+.reveal.zoom {
+    translate: none;
+    scale: 0.82;
+    transition: opacity 0.6s ease, scale 0.6s cubic-bezier(0.2, 0.9, 0.3, 1.25);
+}
+
+.reveal.visible {
+    opacity: 1;
+    translate: none;
+    scale: 1;
+}
+
+.reveal.tilt, .reveal.topic, .reveal.glow-card {
+    transition:
+        opacity 0.7s ease,
+        translate 0.7s cubic-bezier(0.2, 0.8, 0.2, 1),
+        scale 0.6s cubic-bezier(0.2, 0.9, 0.3, 1.25),
+        transform 0.25s ease,
+        background 0.25s,
+        border-color 0.3s,
+        box-shadow 0.3s;
+}
+
+@keyframes ticker { to { transform: translateX(-50%); } }
+@keyframes float { 50% { transform: translateY(-15px); } }
+@keyframes floatCard { 50% { transform: translateY(-14px) rotate(0.6deg); } }
+@keyframes logoFloat { 50% { transform: translateY(-3px); } }
+@keyframes blink { 50% { opacity: 0; } }
+@keyframes shimmer { to { background-position: 300% 0; } }
+@keyframes navDrop { from { transform: translateY(-100%); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes rise { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: none; } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes drift { to { transform: translate(70px, 45px) scale(1.2); } }
+@keyframes riseUp {
+    0% { opacity: 0; transform: translateY(0) rotate(0deg); }
+    15% { opacity: 1; }
+    85% { opacity: 1; }
+    100% { opacity: 0; transform: translateY(-640px) rotate(22deg); }
+}
+@keyframes pulseRing {
+    0% { box-shadow: 0 0 0 0 rgba(39, 201, 255, 0.5); }
+    70% { box-shadow: 0 0 0 14px rgba(39, 201, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(39, 201, 255, 0); }
+}
+@keyframes btnShine { 0%, 55% { left: -120%; } 100% { left: 170%; } }
+@keyframes shine { 0%, 30% { left: -70%; } 55%, 100% { left: 140%; } }
+@keyframes ring {
+    0% { opacity: 0.7; transform: scale(0.9); }
+    100% { opacity: 0; transform: scale(1.45); }
+}
+@keyframes bob { 0%, 100% { translate: 0 0; } 50% { translate: 0 -8px; } }
+@keyframes iconBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes iconSpin { 0% { transform: rotate(0) scale(1); } 50% { transform: rotate(180deg) scale(1.3); } 100% { transform: rotate(360deg) scale(1); } }
+@keyframes swing { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(8deg); } }
+@keyframes spinAngle { to { --angle: 360deg; } }
+@keyframes sweep { to { background-position: 200% 0; } }
+@keyframes pop {
+    0% { opacity: 0; transform: scale(0.8) translateY(30px); }
+    60% { opacity: 1; transform: scale(1.03) translateY(-4px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes slideIn { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: none; } }
+@keyframes rippleAnim { to { transform: scale(4); opacity: 0; } }
+@keyframes confetti { to { transform: translate(var(--dx), var(--dy)) rotate(420deg); opacity: 0; } }
+@keyframes fabBounce { 50% { transform: translateY(-6px); } }
+
+@keyframes topicSwitch {
+    0% {
+        opacity: 0;
+        transform: scale(0.7) rotateY(-90deg);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.05) rotateY(15deg);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) rotateY(0deg);
+    }
+}
+
+html.no-motion {
+    scroll-behavior: auto;
+}
+
+html.no-motion *,
+html.no-motion *::before,
+html.no-motion *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+}
+
+html.no-motion .reveal {
+    opacity: 1;
+    translate: none;
+    scale: 1;
+}
+
+html.no-motion .gradient-text {
+    background-position: 0 0;
+}
+
+html.no-motion #bgCanvas,
+html.no-motion .cursor-glow,
+html.no-motion .hero-symbols {
+    display: none;
+}
+
+@media (hover: none) {
+    .cursor-glow { display: none; }
+}
+
+@media (max-width: 1180px) {
+    .code-card { display: none; }
+}
+
+@media (max-width: 1000px) {
+    .navbar {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .nav-links {
+        gap: 12px;
+    }
+
+    .student-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .topic-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 650px) {
+    .navbar {
+        padding: 13px 5%;
+    }
+
+    .nav-links {
+        width: 100%;
+        gap: 10px 16px;
+    }
+
+    .nav-links a {
+        font-size: 12px;
+    }
+
+    .nav-cta {
+        padding: 7px 12px;
+    }
+
+    .hero {
+        padding: 65px 6%;
+        min-height: 440px;
+    }
+
+    .hero h1 {
+        letter-spacing: -1px;
+    }
+
+    .section {
+        padding: 55px 6%;
+    }
+
+    .stats {
+        padding: 36px 6% 0;
+    }
+
+    .section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .featured {
+        grid-template-columns: 1fr;
+    }
+
+    .feature-visual {
+        min-height: 240px;
+    }
+
+    .student-grid, .advice-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .topic-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .modal-content {
+        padding: 25px 20px;
+    }
+
+    footer {
+        padding: 30px 6%;
+    }
+
+    .motion-toggle {
+        left: 10px;
+        bottom: 14px;
+    }
+
+    .fab {
+        right: 12px;
+        bottom: 14px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="bgCanvas" aria-hidden="true"></canvas>
+<div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+<div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+
+<nav class="navbar" id="navbar">
+    <a class="brand" href="#home">
+        <img src="c:\Users\sundie sorezo\Downloads\c518506f-73b1-42d3-bdea-a6d5e3ea99ae-removebg-preview (1).png" alt="Our Logo" class="brand-logo" onerror="logoFallback(this)">
+        <span>
+            Beyond the Code
+            <small>Real Stories. Real Experiences.</small>
+        </span>
+    </a>
+
+    <div class="nav-links">
+        <a href="#home">Home</a>
+        <a href="#students">Students</a>
+        <a href="#experience">Experiences</a>
+        <a href="#advice">Advice</a>
+        <a href="#about">About</a>
+        <a class="nav-cta" href="#share">Share Your Story ↗</a>
+    </div>
+</nav>
+
+<header class="hero" id="home">
+    <div class="orb o1" aria-hidden="true"></div>
+    <div class="orb o2" aria-hidden="true"></div>
+    <div class="orb o3" aria-hidden="true"></div>
+    <div class="hero-symbols" id="heroSymbols" aria-hidden="true"></div>
+
+    <div class="hero-content">
+        <div class="eyebrow">Lipa City Colleges · Computer Science</div>
+
+        <h1>
+            Beyond the<br>
+            <span class="gradient-text">Code.</span>
+        </h1>
+
+        <h2 id="heroTyped">Real Stories. Real Challenges. Real CS Students.</h2>
+
+        <p>
+            Every programmer has a story. Discover the experiences,
+            struggles, lessons, and ambitions of Computer Science
+            students from second year to fourth year.
+        </p>
+
+        <div class="hero-actions">
+            <a class="btn btn-primary" href="#students">
+                Explore Interviews <span>→</span>
+            </a>
+            <a class="btn btn-outline" href="#experience">
+                Discover Their Stories
+            </a>
+        </div>
+
+        <div class="hero-note">
+            STUDENT VOICES &nbsp; / &nbsp; REAL EXPERIENCES
+            &nbsp; / &nbsp; BEYOND THE CLASSROOM
+        </div>
+    </div>
+
+</header>
+
+<div class="ticker" aria-label="Website themes">
+    <div class="ticker-track" id="tickerTrack" aria-hidden="true">
+        <span>REAL STUDENT STORIES</span>
+        <span>CODING CHALLENGES</span>
+        <span>LESSONS LEARNED</span>
+        <span>FUTURE DEVELOPERS</span>
+        <span>STUDENT PERSPECTIVES</span>
+    </div>
+</div>
+
+<section class="stats" aria-label="Project at a glance">
+    <div class="stat reveal bob glow-card tilt">
+        <span class="stat-icon">“</span>
+        <strong class="stat-num" data-stat="interviews">3</strong>
+        <small>Student Interviews</small>
+    </div>
+    <div class="stat reveal bob glow-card tilt">
+        <span class="stat-icon">↗</span>
+        <strong class="stat-num" data-stat="years">3</strong>
+        <small>Year Levels</small>
+    </div>
+    <div class="stat reveal bob glow-card tilt">
+        <span class="stat-icon">&lt;/&gt;</span>
+        <strong class="stat-num" data-stat="topics">5</strong>
+        <small>Experience Topics</small>
+    </div>
+    <div class="stat reveal bob glow-card tilt">
+        <span class="stat-icon">✦</span>
+        <strong class="stat-num" data-stat="advice">3</strong>
+        <small>Pieces of Advice</small>
+    </div>
+</section>
+
+<section class="section reveal" id="featured">
+    <div class="featured">
+        <div class="featured-copy">
+            <div class="eyebrow">The Featured Story</div>
+            <h2>There's More to CS Than Just Coding.</h2>
+            <p>
+                Behind every program is a person learning to solve
+                problems, overcome frustration, and turn ideas into
+                something real. Hear the stories behind the screen.
+            </p>
+            <a class="btn btn-primary" href="#students">
+                Meet the Students →
+            </a>
+        </div>
+
+        <div class="feature-visual glow-card tilt">
+            <div class="quote-mark">“</div>
+            <blockquote id="featuredQuote">
+                Every error is a chance to understand something better.
+            </blockquote>
+        </div>
+    </div>
+</section>
+
+<section class="section dark-section" id="students">
+    <div class="section-heading reveal">
+        <div>
+            <div class="eyebrow">Meet the CS Students</div>
+            <h2>Different Years. Different Perspectives.</h2>
+            <p>
+                Get to know the students behind the stories.
+                Choose a year level or search for a topic.
+            </p>
+        </div>
+    </div>
+
+    <div class="filters reveal" aria-label="Filter by year level">
+        <button class="filter-btn active" data-year="all">All Stories</button>
+        <button class="filter-btn" data-year="2">2nd Year</button>
+        <button class="filter-btn" data-year="3">3rd Year</button>
+        <button class="filter-btn" data-year="4">4th Year</button>
+    </div>
+
+    <input
+        class="search-box reveal"
+        id="studentSearch"
+        type="search"
+        placeholder="Search names, year levels, or topics..."
+        aria-label="Search student stories"
+    >
+
+    <div class="student-grid" id="studentGrid">
+
+        <article class="student-card reveal bob glow-card tilt"
+            data-year="2" data-student="s2"
+            data-search="second year">
+            <div class="student-top">
+                <div class="avatar">02</div>
+                <div>
+                    <span class="year-badge">2ND YEAR</span>
+                    <h3>Student Interview 01</h3>
+                    <p class="course">Computer Science</p>
+                </div>
+            </div>
+            <blockquote>Interview answers coming soon.</blockquote>
+            <div class="card-bottom">
+                <span class="eyebrow card-status">Demo Content</span>
+                <button class="text-btn read-story"
+                    data-student="s2">Read Interview →</button>
+            </div>
+        </article>
+
+        <article class="student-card reveal bob glow-card tilt"
+            data-year="3" data-student="s3"
+            data-search="third year">
+            <div class="student-top">
+                <div class="avatar">03</div>
+                <div>
+                    <span class="year-badge">3RD YEAR</span>
+                    <h3>Student Interview 02</h3>
+                    <p class="course">Computer Science</p>
+                </div>
+            </div>
+            <blockquote>Interview answers coming soon.</blockquote>
+            <div class="card-bottom">
+                <span class="eyebrow card-status">Demo Content</span>
+                <button class="text-btn read-story"
+                    data-student="s3">Read Interview →</button>
+            </div>
+        </article>
+
+        <article class="student-card reveal bob glow-card tilt"
+            data-year="4" data-student="s4"
+            data-search="fourth year">
+            <div class="student-top">
+                <div class="avatar">04</div>
+                <div>
+                    <span class="year-badge">4TH YEAR</span>
+                    <h3>Student Interview 03</h3>
+                    <p class="course">Computer Science</p>
+                </div>
+            </div>
+            <blockquote>Interview answers coming soon.</blockquote>
+            <div class="card-bottom">
+                <span class="eyebrow card-status">Demo Content</span>
+                <button class="text-btn read-story"
+                    data-student="s4">Read Interview →</button>
+            </div>
+        </article>
+
+    </div>
+
+    <p id="noResults" class="no-results" hidden>
+        No stories found. Try another search or year level.
+    </p>
+</section>
+
+<section class="section reveal" id="experience">
+    <div class="section-heading">
+        <div>
+            <div class="eyebrow">Beyond the Classroom</div>
+            <h2>The Real CS Experience</h2>
+            <p>
+                Explore the themes that come up in student interviews.
+                Each topic can become a collection of real answers.
+            </p>
+        </div>
+    </div>
+
+    <div class="topic-grid">
+        <button class="topic reveal zoom glow-card" data-topic="Hardest Subjects">
+            <span class="topic-icon">&lt;/&gt;</span>
+            <strong>Hardest Subjects</strong>
+            <small>What challenged them most?</small>
+        </button>
+
+        <button class="topic reveal zoom glow-card" data-topic="Programming Struggles">
+            <span class="topic-icon">⌨</span>
+            <strong>Programming Struggles</strong>
+            <small>Debugging and problem-solving</small>
+        </button>
+
+        <button class="topic reveal zoom glow-card" data-topic="Time Management">
+            <span class="topic-icon">◷</span>
+            <strong>Time Management</strong>
+            <small>Deadlines and school life</small>
+        </button>
+
+        <button class="topic reveal zoom glow-card" data-topic="Campus Life">
+            <span class="topic-icon">◎</span>
+            <strong>Campus Life</strong>
+            <small>Friends and collaboration</small>
+        </button>
+
+        <button class="topic reveal zoom glow-card" data-topic="Skills and Growth">
+            <span class="topic-icon">↗</span>
+            <strong>Skills & Growth</strong>
+            <small>How students have changed</small>
+        </button>
+    </div>
+</section>
+
+<section class="section dark-section reveal" id="advice">
+    <div class="section-heading">
+        <div>
+            <div class="eyebrow">Advice for Future CS Students</div>
+            <h2>Words That Matter.</h2>
+            <p>
+                A collection of lessons, encouragement, and practical
+                advice shared by students who have been through it.
+            </p>
+        </div>
+        <button class="btn btn-outline advice-edit" type="button" hidden>✎ Edit advice &amp; quotes</button>
+    </div>
+
+    <div class="advice-grid">
+        <article class="advice-card reveal bob glow-card tilt" data-student="s2">
+            <div class="quote-mark">“</div>
+            <blockquote>Advice from our 2nd Year interviewee will appear here.</blockquote>
+            <small>— 2nd Year · Interview quote</small>
+            <p class="motto" hidden><span>Motivational quote</span><em></em></p>
+            <p><button class="text-btn copy-quote">Copy Quote ↗</button></p>
+        </article>
+
+        <article class="advice-card reveal bob glow-card tilt" data-student="s3">
+            <div class="quote-mark">“</div>
+            <blockquote>Advice from our 3rd Year interviewee will appear here.</blockquote>
+            <small>— 3rd Year · Interview quote</small>
+            <p class="motto" hidden><span>Motivational quote</span><em></em></p>
+            <p><button class="text-btn copy-quote">Copy Quote ↗</button></p>
+        </article>
+
+        <article class="advice-card reveal bob glow-card tilt" data-student="s4">
+            <div class="quote-mark">“</div>
+            <blockquote>Advice from our 4th Year interviewee will appear here.</blockquote>
+            <small>— 4th Year · Interview quote</small>
+            <p class="motto" hidden><span>Motivational quote</span><em></em></p>
+            <p><button class="text-btn copy-quote">Copy Quote ↗</button></p>
+        </article>
+    </div>
+</section>
+
+<section class="section" id="share">
+    <div class="share-banner reveal">
+        <div class="banner-orb b1" aria-hidden="true"></div>
+        <div class="banner-orb b2" aria-hidden="true"></div>
+        <div class="eyebrow">Every Student Has a Story</div>
+        <h2>Your Experience Matters.</h2>
+        <p>
+            Have an experience, lesson, or perspective worth sharing?
+            Help other Computer Science students learn from your journey.
+        </p>
+        <button class="btn btn-primary" id="openShare">
+            Share Your Story ↗
+        </button>
+    </div>
+</section>
+
+<section class="section dark-section reveal" id="about">
+    <div class="featured">
+        <div>
+            <div class="eyebrow">About the Project</div>
+            <h2 class="section-heading" style="display:block">
+                A <span class="gradient-text">Human Side</span> to Computer Science.
+            </h2>
+        </div>
+        <div class="about-box glow-card tilt">
+            <p style="color:var(--muted)">
+                Beyond the Code is a student interview project focused
+                on the real experiences of second-year, third-year,
+                and fourth-year Computer Science students at Lipa City
+                Colleges. It aims to share their perspectives, challenges,
+                personal growth, and advice with the wider student community.
+            </p>
+            <p style="color:var(--muted)">
+                Stories and quotations should be based on actual interviews
+                and published with the interviewees' permission.
+            </p>
+        </div>
+    </div>
+</section>
+
+<footer class="reveal">
+    <div>
+        <a class="brand" href="#home">
+            <img src="c:\Users\sundie sorezo\Downloads\c518506f-73b1-42d3-bdea-a6d5e3ea99ae-removebg-preview (1).png" alt="Our Logo" class="brand-logo" onerror="logoFallback(this)">
+            <span>Beyond the Code
+                <small>Real Stories. Real Experiences.</small>
+            </span>
+        </a>
+        <p>A Computer Science student interview project.</p>
+    </div>
+
+    <div class="footer-links">
+        <a href="#students">Interviews</a>
+        <a href="#experience">Experiences</a>
+        <a href="#advice">Advice</a>
+        <a href="#about">About</a>
+    </div>
+
+    <small>© 2026 Beyond the Code · Student Project</small>
+</footer>
+
+<button class="motion-toggle" id="motionToggle" aria-pressed="true">✦ Animations: ON</button>
+<button class="fab" id="toTop" aria-label="Back to top">↑</button>
+
+<div class="modal" id="storyModal" role="dialog"
+    aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-content">
+        <button class="close-modal" aria-label="Close interview">×</button>
+        <div class="eyebrow" id="modalYear">STUDENT INTERVIEW</div>
+        <h2 id="modalTitle">Interview Story</h2>
+        <div id="modalBody"></div>
+
+        <div class="modal-actions">
+            <button class="btn btn-outline" id="editToggle" type="button" hidden>✎ Edit answers</button>
+            <button class="btn btn-outline" id="shareQuote" type="button">Copy Interview Text</button>
+            <span class="save-status" id="saveStatus" role="status"></span>
+        </div>
+
+        <div class="backup-row" id="backupRow" hidden>
+            <small>Answers save automatically in this browser only. Download a backup to keep a copy or move it to another device.</small>
+            <button class="text-btn" id="exportData" type="button">⬇ Download backup</button>
+            <button class="text-btn" id="importData" type="button">⬆ Load backup</button>
+            <input type="file" id="importFile" accept="application/json,.json" hidden>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="shareModal" role="dialog"
+    aria-modal="true" aria-labelledby="shareTitle">
+    <div class="modal-content">
+        <button class="close-modal" aria-label="Close form">×</button>
+        <div class="eyebrow">SHARE YOUR EXPERIENCE</div>
+        <h2 id="shareTitle">Tell Us Your Story.</h2>
+        <p>
+            Fill out the form and your story will be sent directly
+            to the Beyond the Code team.
+        </p>
+
+        <form id="storyForm" class="form-grid">
+            <div class="field">
+                <label for="studentName">Name or preferred alias</label>
+                <input id="studentName" name="studentName"
+                    maxlength="80" required>
+            </div>
+
+            <div class="field">
+                <label for="studentYear">Year Level</label>
+                <select id="studentYear" name="studentYear" required>
+                    <option value="">Choose your year</option>
+                    <option value="2nd Year">2nd Year</option>
+                    <option value="3rd Year">3rd Year</option>
+                    <option value="4th Year">4th Year</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="storyTopic">What is your story about?</label>
+                <select id="storyTopic" name="storyTopic" required>
+                    <option value="">Choose a topic</option>
+                    <option>Programming struggles</option>
+                    <option>Hardest subjects</option>
+                    <option>Time management</option>
+                    <option>Campus life</option>
+                    <option>Projects and achievements</option>
+                    <option>Advice for future CS students</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="studentStory">Your experience</label>
+                <textarea id="studentStory" name="studentStory"
+                    maxlength="3000" required
+                    placeholder="Share the experience or lesson you want others to learn from..."></textarea>
+            </div>
+
+            <button class="btn btn-primary" type="submit">
+                Send My Story →
+            </button>
+        </form>
+
+        <p class="form-note">
+            Please do not include passwords, student numbers, or other
+            sensitive personal information.
+        </p>
+
+        <div class="form-message" id="formMessage" role="status"></div>
+    </div>
+</div>
+
+<script>
+const EDITING_ENABLED = true;
+
+const STORY_RECEIVER_EMAIL = "ferdinandsumampowngbutdiff@gmail.com";
+
+const PUBLISHED_DATA = null;
+
+const STORE_KEY = "beyondTheCode.interviews.v1";
+
+const STUDENTS = [
+    { id: "s2", year: "2nd Year", words: "second year", defaultName: "Student Interview 01" },
+    { id: "s3", year: "3rd Year", words: "third year", defaultName: "Student Interview 02" },
+    { id: "s4", year: "4th Year", words: "fourth year", defaultName: "Student Interview 03" }
+];
+
+const INTERVIEW_QUESTIONS = [
+    { id: "q1", text: "Why did you choose Computer Science?" },
+    { id: "q2", text: "What inspired you to pursue this program?" },
+    { id: "q3", text: "What was your first impression of Computer Science when you started college?" },
+    { id: "q4", text: "If you could describe your CS journey in three words, what would they be?" },
+    { id: "q5", text: "What career path are you interested in pursuing after graduation?" },
+    { id: "q6", text: "Do you see yourself building a future in this program?" }
+];
+
+const TOPICS = {
+    "Hardest Subjects": {
+        title: "Hardest Subjects",
+        intro: "What subjects challenged our interviewed CS students the most?",
+        questions: [
+            { id: "q7", text: "What has challenged you the most as a Computer Science student?" },
+            { id: "q8", text: "What is the hardest subject you've encountered so far, and why?" }
+        ]
+    },
+    "Programming Struggles": {
+        title: "Programming Struggles",
+        intro: "The programming struggles shared by our interviewed students.",
+        questions: [
+            { id: "q9", text: "What is your biggest struggle when it comes to programming?" }
+        ]
+    },
+    "Time Management": {
+        title: "Time Management",
+        intro: "How CS students manage deadlines, projects, and school life.",
+        questions: [
+            { id: "q10", text: "How do you balance academics, personal life, and other responsibilities?" }
+        ]
+    },
+    "Campus Life": {
+        title: "Campus Life",
+        intro: "The students' experiences with friends, classmates, and collaboration.",
+        questions: [
+            { id: "q11", text: "What do you enjoy most about campus life?" }
+        ]
+    },
+    "Skills and Growth": {
+        title: "Skills & Growth",
+        intro: "How our CS students have changed and grown throughout their journey.",
+        questions: [
+            { id: "q12", text: "What technical or programming skill have you improved the most?" },
+            { id: "q13", text: "What skill do you think every aspiring CS student should develop?" }
+        ]
+    },
+    "Advice": {
+        title: "Words That Matter",
+        eyebrow: "ADVICE FOR FUTURE CS STUDENTS",
+        intro: "Advice and motivational quotes from our interviewed students.",
+        questions: [
+            { id: "q14", text: "What advice would you give to first-year students?" },
+            { id: "q15", text: "Can you share a motivational quote that keeps you going as a CS student?" }
+        ]
+    }
+};
+
+const ALL_QUESTIONS = INTERVIEW_QUESTIONS.concat(
+    Object.values(TOPICS).flatMap(topic => topic.questions)
+);
+
+const CARD_QUOTE_Q = "q1";
+const ADVICE_Q = "q14";
+const MOTTO_Q = "q15";
+
+function cleanStore(raw) {
+    const out = { names: {}, answers: {} };
+    if (!raw || typeof raw !== "object") return out;
+
+    STUDENTS.forEach(student => {
+        if (raw.names && typeof raw.names[student.id] === "string") {
+            out.names[student.id] = raw.names[student.id];
+        }
+
+        out.answers[student.id] = {};
+        const source = raw.answers && raw.answers[student.id];
+
+        if (source && typeof source === "object") {
+            ALL_QUESTIONS.forEach(question => {
+                if (typeof source[question.id] === "string") {
+                    out.answers[student.id][question.id] = source[question.id];
+                }
+            });
+        }
+    });
+
+    return out;
+}
+
+function loadStore() {
+    let raw = null;
+
+    try {
+        const saved = localStorage.getItem(STORE_KEY);
+        if (saved) raw = JSON.parse(saved);
+    } catch (error) {
+        raw = null;
+    }
+
+    return cleanStore(raw || PUBLISHED_DATA);
+}
+
+function saveStore() {
+    try {
+        localStorage.setItem(STORE_KEY, JSON.stringify(store));
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
+
+let store = loadStore();
+let modalCtx = null;
+let editing = false;
+let saveTimer = null;
+
+function getAnswer(studentId, questionId) {
+    return String((store.answers[studentId] || {})[questionId] || "").trim();
+}
+
+function setAnswer(studentId, questionId, value) {
+    if (!store.answers[studentId]) store.answers[studentId] = {};
+    store.answers[studentId][questionId] = value;
+}
+
+function getName(student) {
+    return String(store.names[student.id] || "").trim() || student.defaultName;
+}
+
+function refreshPage() {
+    document.querySelectorAll(".student-card").forEach(card => {
+        const student = STUDENTS.find(item => item.id === card.dataset.student);
+        if (!student) return;
+
+        const name = getName(student);
+        const quote = getAnswer(student.id, CARD_QUOTE_Q);
+        const answers = ALL_QUESTIONS.map(question => getAnswer(student.id, question.id));
+        const hasAnswers = answers.some(Boolean);
+
+        card.querySelector("h3").textContent = name;
+        card.querySelector("blockquote").textContent =
+            quote ? "“" + quote + "”" : "Interview answers coming soon.";
+        card.querySelector(".card-status").textContent =
+            hasAnswers ? "Interview" : "Demo Content";
+
+        card.dataset.search =
+            [student.year, student.words, name].concat(answers).join(" ").toLowerCase();
+    });
+
+    document.querySelectorAll(".advice-card").forEach(card => {
+        const student = STUDENTS.find(item => item.id === card.dataset.student);
+        if (!student) return;
+
+        const advice = getAnswer(student.id, ADVICE_Q);
+        const motto = getAnswer(student.id, MOTTO_Q);
+        const named = String(store.names[student.id] || "").trim();
+
+        card.querySelector("blockquote").textContent =
+            advice || "Advice from our " + student.year + " interviewee will appear here.";
+        card.querySelector("small").textContent =
+            "— " + student.year + " · " + (named || "Interview quote");
+
+        const mottoBox = card.querySelector(".motto");
+        mottoBox.hidden = !motto;
+        mottoBox.querySelector("em").textContent = motto ? "“" + motto + "”" : "";
+    });
+}
+
+const rootEl = document.documentElement;
+const motionBtn = document.getElementById("motionToggle");
+const reduceQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+let motionOn = !reduceQuery.matches;
+
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+const filterButtons = document.querySelectorAll(".filter-btn");
+const studentCards = document.querySelectorAll(".student-card");
+const searchInput = document.getElementById("studentSearch");
+const noResults = document.getElementById("noResults");
+let selectedYear = "all";
+
+function filterStudents() {
+    const query = searchInput.value.trim().toLowerCase();
+    let shown = 0;
+
+    studentCards.forEach(card => {
+        const matchesYear =
+            selectedYear === "all" || card.dataset.year === selectedYear;
+
+        const matchesSearch =
+            card.dataset.search.toLowerCase().includes(query) ||
+            card.textContent.toLowerCase().includes(query);
+
+        const visible = matchesYear && matchesSearch;
+        const wasHidden = card.hidden;
+        card.hidden = !visible;
+
+        if (visible) {
+            if (wasHidden) {
+                card.classList.remove("visible");
+                void card.offsetWidth;
+                const delay = shown * 110;
+                setTimeout(() => card.classList.add("visible"), delay);
+            } else {
+                card.classList.add("visible");
+            }
+            shown++;
+        }
+    });
+
+    noResults.hidden = shown !== 0;
+}
+
+filterButtons.forEach(button => {
+    button.addEventListener("click", () => {
+        selectedYear = button.dataset.year;
+
+        filterButtons.forEach(item =>
+            item.classList.toggle("active", item === button)
+        );
+
+        filterStudents();
+    });
+});
+
+searchInput.addEventListener("input", filterStudents);
+
+const storyModal = document.getElementById("storyModal");
+const shareModal = document.getElementById("shareModal");
+
+function openModal(modal) {
+    modal.classList.add("open");
+    document.body.style.overflow = "hidden";
+    modal.querySelector(".close-modal").focus();
+}
+
+function closeModal(modal) {
+    if (modal === storyModal) {
+        commitPending();
+        editing = false;
+    }
+
+    modal.classList.remove("open");
+
+    if (!document.querySelector(".modal.open")) {
+        document.body.style.overflow = "";
+    }
+}
+
+document.querySelectorAll(".close-modal").forEach(button => {
+    button.addEventListener("click", () => {
+        closeModal(button.closest(".modal"));
+    });
+});
+
+document.querySelectorAll(".modal").forEach(modal => {
+    modal.addEventListener("click", event => {
+        if (event.target === modal) closeModal(modal);
+    });
+});
+
+document.addEventListener("keydown", event => {
+    if (event.key === "Escape") {
+        document.querySelectorAll(".modal.open").forEach(modal => closeModal(modal));
+    }
+});
+
+function burst(x, y) {
+    if (!motionOn) return;
+
+    const colors = ["#27c9ff", "#8de6ff", "#7c8cff", "#ff7ad9", "#ffd166"];
+
+    for (let i = 0; i < 20; i++) {
+        const piece = document.createElement("i");
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 60 + Math.random() * 100;
+
+        piece.className = "confetti";
+        piece.style.left = x + "px";
+        piece.style.top = y + "px";
+        piece.style.background = colors[i % colors.length];
+        piece.style.setProperty("--dx", Math.cos(angle) * distance + "px");
+        piece.style.setProperty("--dy", Math.sin(angle) * distance - 40 + "px");
+
+        document.body.appendChild(piece);
+        setTimeout(() => piece.remove(), 950);
+    }
+}
+
+function flashLabel(button, text, original) {
+    button.textContent = text;
+    setTimeout(() => { button.textContent = original; }, 2000);
+}
+
+const modalContent = storyModal.querySelector(".modal-content");
+const modalBody = document.getElementById("modalBody");
+const modalYear = document.getElementById("modalYear");
+const modalTitle = document.getElementById("modalTitle");
+const editToggle = document.getElementById("editToggle");
+const backupRow = document.getElementById("backupRow");
+const saveStatus = document.getElementById("saveStatus");
+const importFile = document.getElementById("importFile");
+const adviceEdit = document.querySelector(".advice-edit");
+
+function setStatus(text, isError) {
+    saveStatus.textContent = text;
+    saveStatus.classList.toggle("error", Boolean(isError));
+}
+
+function flushSave() {
+    clearTimeout(saveTimer);
+    saveTimer = null;
+
+    const ok = saveStore();
+    setStatus(ok ? "Saved ✓" : "Couldn’t save in this browser. Use “Download backup”.", !ok);
+    refreshPage();
+}
+
+function scheduleSave() {
+    setStatus("Saving…");
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(flushSave, 350);
+}
+
+function commitPending() {
+    if (saveTimer !== null) flushSave();
+}
+
+function questionBlock(className, question, index) {
+    const block = document.createElement("div");
+    block.className = className;
+    block.style.setProperty("--i", Math.min(index, 10));
+
+    const heading = document.createElement("strong");
+    heading.textContent = question.text;
+    block.appendChild(heading);
+
+    return block;
+}
+
+function answerNode(student, question) {
+    const value = (store.answers[student.id] || {})[question.id] || "";
+
+    if (editing) {
+        const area = document.createElement("textarea");
+        area.className = "edit-input";
+        area.dataset.student = student.id;
+        area.dataset.q = question.id;
+        area.rows = 3;
+        area.placeholder = "Type the " + student.year + " student’s answer here…";
+        area.setAttribute("aria-label", question.text + " (" + student.year + ")");
+        area.value = value;
+        return area;
+    }
+
+    const paragraph = document.createElement("p");
+    paragraph.className = "answer-text";
+
+    if (value.trim()) {
+        paragraph.textContent = value.trim();
+    } else {
+        paragraph.textContent = "No answer yet.";
+        paragraph.classList.add("empty");
+    }
+
+    return paragraph;
+}
+
+function buildCopyText() {
+    if (modalCtx.type === "student") {
+        const student = STUDENTS.find(item => item.id === modalCtx.id);
+
+        return getName(student) + " (" + student.year + ")\n\n" +
+            INTERVIEW_QUESTIONS.map(question =>
+                question.text + "\n" + (getAnswer(student.id, question.id) || "—")
+            ).join("\n\n");
+    }
+
+    const topic = TOPICS[modalCtx.id];
+
+    return topic.title + "\n\n" +
+        topic.questions.map(question =>
+            question.text + "\n" +
+            STUDENTS.map(student =>
+                student.year + " · " + getName(student) + ": " +
+                (getAnswer(student.id, question.id) || "—")
+            ).join("\n")
+        ).join("\n\n");
+}
+
+function renderModal(animate) {
+    modalBody.replaceChildren();
+    modalBody.classList.toggle("qa-static", !animate);
+    setStatus("");
+
+    let index = 0;
+
+    if (modalCtx.type === "student") {
+        const student = STUDENTS.find(item => item.id === modalCtx.id);
+
+        modalYear.textContent = student.year.toUpperCase() + " · INTERVIEW";
+        modalTitle.textContent = getName(student);
+
+        if (editing) {
+            const label = document.createElement("label");
+            label.className = "edit-label";
+            label.htmlFor = "editName";
+            label.textContent = "Name or alias (shown on the card)";
+
+            const input = document.createElement("input");
+            input.className = "edit-input";
+            input.id = "editName";
+            input.maxLength = 80;
+            input.placeholder = student.defaultName;
+            input.value = store.names[student.id] || "";
+            input.dataset.kind = "name";
+            input.dataset.student = student.id;
+
+            modalBody.append(label, input);
+        }
+
+        INTERVIEW_QUESTIONS.forEach(question => {
+            const block = questionBlock("interview-answer", question, index++);
+            block.appendChild(answerNode(student, question));
+            modalBody.appendChild(block);
+        });
+    } else {
+        const topic = TOPICS[modalCtx.id];
+
+        modalYear.textContent = topic.eyebrow || "REAL CS EXPERIENCE";
+        modalTitle.textContent = topic.title;
+
+        const intro = document.createElement("p");
+        intro.textContent = topic.intro;
+        modalBody.appendChild(intro);
+
+        topic.questions.forEach(question => {
+            const block = questionBlock("topic-answer", question, index++);
+
+            STUDENTS.forEach(student => {
+                const row = document.createElement("div");
+                row.className = "qa-row";
+
+                const who = document.createElement("span");
+                who.className = "qa-who";
+                who.textContent = student.year + " · " + getName(student);
+
+                row.append(who, answerNode(student, question));
+                block.appendChild(row);
+            });
+
+            modalBody.appendChild(block);
+        });
+    }
+
+    editToggle.hidden = !EDITING_ENABLED;
+    editToggle.textContent = editing ? "✓ Done editing" : "✎ Edit answers";
+    editToggle.className = "btn " + (editing ? "btn-primary" : "btn-outline");
+    backupRow.hidden = !(EDITING_ENABLED && editing);
+}
+
+function openInterview(ctx, withTopicAnimation) {
+    modalCtx = ctx;
+    editing = false;
+    renderModal(true);
+    modalContent.scrollTop = 0;
+
+    modalContent.classList.remove("topic-modal-animation");
+
+    if (withTopicAnimation) {
+        void modalContent.offsetWidth;
+        modalContent.classList.add("topic-modal-animation");
+    }
+
+    openModal(storyModal);
+}
+
+document.querySelectorAll(".read-story").forEach(button => {
+    button.addEventListener("click", () => {
+        openInterview({ type: "student", id: button.dataset.student }, false);
+    });
+});
+
+document.querySelectorAll(".topic").forEach(button => {
+    button.addEventListener("click", () => {
+        if (!TOPICS[button.dataset.topic]) return;
+        openInterview({ type: "topic", id: button.dataset.topic }, true);
+    });
+});
+
+adviceEdit.hidden = !EDITING_ENABLED;
+adviceEdit.addEventListener("click", () => {
+    openInterview({ type: "topic", id: "Advice" }, false);
+});
+
+editToggle.addEventListener("click", () => {
+    commitPending();
+    editing = !editing;
+    renderModal(false);
+});
+
+modalBody.addEventListener("input", event => {
+    const field = event.target;
+    if (!field.classList || !field.classList.contains("edit-input")) return;
+
+    if (field.dataset.kind === "name") {
+        store.names[field.dataset.student] = field.value;
+
+        const student = STUDENTS.find(item => item.id === field.dataset.student);
+        modalTitle.textContent = getName(student);
+    } else {
+        setAnswer(field.dataset.student, field.dataset.q, field.value);
+    }
+
+    scheduleSave();
+});
+
+function exportStore() {
+    commitPending();
+
+    const blob = new Blob([JSON.stringify(store, null, 2)], {
+        type: "application/json"
+    });
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = "beyond-the-code-answers.json";
+    link.click();
+
+    URL.revokeObjectURL(url);
+}
+
+function importStore(file) {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+        try {
+            const imported = cleanStore(JSON.parse(reader.result));
+
+            clearTimeout(saveTimer);
+            saveTimer = null;
+            store = imported;
+            saveStore();
+            refreshPage();
+            renderModal(false);
+            setStatus("Backup loaded ✓");
+        } catch (error) {
+            setStatus("That file isn’t a valid backup.", true);
+        }
+    };
+
+    reader.readAsText(file);
+}
+
+document.getElementById("exportData").addEventListener("click", exportStore);
+
+document.getElementById("importData").addEventListener("click", () => {
+    importFile.click();
+});
+
+importFile.addEventListener("change", () => {
+    if (importFile.files[0]) importStore(importFile.files[0]);
+    importFile.value = "";
+});
+
+document.getElementById("shareQuote").addEventListener("click", async event => {
+    const button = document.getElementById("shareQuote");
+    const original = "Copy Interview Text";
+
+    try {
+        await navigator.clipboard.writeText(buildCopyText());
+        flashLabel(button, "Copied!", original);
+        burst(event.clientX, event.clientY);
+    } catch {
+        flashLabel(button, "Copy unavailable in this browser", original);
+    }
+});
+
+document.getElementById("openShare").addEventListener("click", () => {
+    openModal(shareModal);
+});
+
+document.querySelectorAll(".copy-quote").forEach(button => {
+    button.addEventListener("click", async event => {
+        const quote = button.closest(".advice-card")
+            .querySelector("blockquote").textContent.trim();
+
+        try {
+            await navigator.clipboard.writeText(quote);
+            flashLabel(button, "Copied!", "Copy Quote ↗");
+            burst(event.clientX, event.clientY);
+        } catch {
+            flashLabel(button, "Select and copy the quote", "Copy Quote ↗");
+        }
+    });
+});
+
+document.getElementById("storyForm").addEventListener("submit", async event => {
+    event.preventDefault();
+
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    const button = form.querySelector('button[type="submit"]');
+    const message = document.getElementById("formMessage");
+    const originalLabel = button.textContent;
+
+    function showMessage(text, isError = false) {
+        message.textContent = text;
+        message.style.color = isError ? "#ff8a8a" : "";
+        message.classList.remove("show");
+        void message.offsetWidth;
+        if (!isError) message.classList.add("show");
+    }
+
+    if (!STORY_RECEIVER_EMAIL || !STORY_RECEIVER_EMAIL.includes("@")) {
+        showMessage("The receiving email is not configured correctly. Please try again later.", true);
+        return;
+    }
+
+    button.disabled = true;
+    button.textContent = "Sending...";
+    message.textContent = "";
+
+    const payload = new URLSearchParams();
+    payload.append("_subject", "New story from " + data.get("studentName") + " (" + data.get("studentYear") + ")");
+    payload.append("_template", "table");
+    payload.append("_captcha", "false");
+    payload.append("_honey", "");
+    payload.append("Name / Alias", data.get("studentName"));
+    payload.append("Year Level", data.get("studentYear"));
+    payload.append("Topic", data.get("storyTopic"));
+    payload.append("Story", data.get("studentStory"));
+
+    function onSuccess() {
+        showMessage("Thank you! Your story has been submitted. If this is the first submission, check the receiving inbox for FormSubmit's activation email and click Activate.");
+        const rect = form.getBoundingClientRect();
+        burst(rect.left + rect.width / 2, rect.top + rect.height / 2);
+        form.reset();
+    }
+
+    // Fallback: normal form POST into a hidden iframe. Works even when the page is
+    // opened as a local file (file://), where fetch() to FormSubmit gets blocked.
+    function sendWithHiddenForm() {
+        return new Promise(resolve => {
+            const iframe = document.createElement("iframe");
+            iframe.name = "formsubmit-target-" + Date.now();
+            iframe.style.display = "none";
+            document.body.appendChild(iframe);
+
+            const hidden = document.createElement("form");
+            hidden.method = "POST";
+            hidden.action = "https://formsubmit.co/" + encodeURIComponent(STORY_RECEIVER_EMAIL);
+            hidden.target = iframe.name;
+            hidden.style.display = "none";
+
+            payload.forEach((value, key) => {
+                const input = document.createElement("input");
+                input.type = "hidden";
+                input.name = key;
+                input.value = value;
+                hidden.appendChild(input);
+            });
+            hidden.querySelector('[name="_captcha"]').value = "false";
+
+            let done = false;
+            const finish = () => {
+                if (done) return;
+                done = true;
+                setTimeout(() => { hidden.remove(); iframe.remove(); }, 1000);
+                resolve();
+            };
+            iframe.addEventListener("load", finish);
+            setTimeout(finish, 8000);
+
+            document.body.appendChild(hidden);
+            hidden.submit();
+        });
+    }
+
+    try {
+        let response;
+        try {
+            response = await fetch(
+                "https://formsubmit.co/ajax/" + encodeURIComponent(STORY_RECEIVER_EMAIL),
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+                        "Accept": "application/json"
+                    },
+                    body: payload.toString()
+                }
+            );
+        } catch (networkError) {
+            // fetch was blocked (file://, CORS, extension) or there is no connection
+            console.warn("AJAX send blocked, using fallback:", networkError);
+            if (!navigator.onLine) throw new Error("You appear to be offline.");
+            await sendWithHiddenForm();
+            onSuccess();
+            return;
+        }
+
+        const result = await response.json().catch(() => ({}));
+        console.log("FormSubmit response:", response.status, result);
+
+        if (!response.ok || result.success === false || result.success === "false") {
+            throw new Error(result.message || "The email service rejected the submission (status " + response.status + ").");
+        }
+
+        onSuccess();
+    } catch (error) {
+        console.error("Story submission failed:", error);
+        const reason = error && error.message ? " (" + error.message + ")" : "";
+        showMessage("Sorry, your story could not be sent" + reason + ". Please try again in a moment.", true);
+    } finally {
+        button.disabled = false;
+        button.textContent = originalLabel;
+    }
+});
+
+document.querySelectorAll(".student-grid, .advice-grid, .topic-grid, .stats").forEach(group => {
+    [...group.children].forEach((child, index) => {
+        child.dataset.delay = index * 130;
+        child.style.setProperty("--i", index);
+    });
+});
+
+studentCards.forEach((card, index) => {
+    if (index % 3 === 0) card.classList.add("from-left");
+    if (index % 3 === 2) card.classList.add("from-right");
+});
+
+const revealObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const element = entry.target;
+            const delay = Number(element.dataset.delay) || 0;
+
+            setTimeout(() => element.classList.add("visible"), delay);
+            revealObserver.unobserve(element);
+        }
+    });
+}, { threshold: 0.12 });
+
+document.querySelectorAll(".reveal").forEach(element => {
+    revealObserver.observe(element);
+});
+
+const statValues = {
+    interviews: studentCards.length,
+    years: document.querySelectorAll('.filter-btn:not([data-year="all"])').length,
+    topics: document.querySelectorAll(".topic").length,
+    advice: document.querySelectorAll(".advice-card").length
+};
+
+function countUp(element, target) {
+    if (!motionOn) {
+        element.textContent = target;
+        return;
+    }
+
+    const duration = 1400;
+    const start = performance.now();
+
+    function step(now) {
+        const progress = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        element.textContent = Math.round(target * eased);
+
+        if (progress < 1) requestAnimationFrame(step);
+    }
+
+    requestAnimationFrame(step);
+}
+
+const statObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const number = entry.target.querySelector(".stat-num");
+            countUp(number, statValues[number.dataset.stat]);
+            statObserver.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.4 });
+
+document.querySelectorAll(".stat").forEach(stat => {
+    stat.querySelector(".stat-num").textContent = "0";
+    statObserver.observe(stat);
+});
+
+const tickerTrack = document.getElementById("tickerTrack");
+const tickerLabels = [...tickerTrack.children].map(item => item.textContent);
+
+tickerTrack.replaceChildren();
+
+for (let i = 0; i < 6; i++) {
+    tickerLabels.forEach(label => {
+        const item = document.createElement("span");
+        item.textContent = label;
+        tickerTrack.appendChild(item);
+    });
+}
+
+const symbolBox = document.getElementById("heroSymbols");
+const symbols = ["{ }", "</>", "=>", "[ ]", "( )", "&&", "//", "01", "#", "$_", "fn", ";"];
+
+for (let i = 0; i < 18; i++) {
+    const symbol = document.createElement("span");
+
+    symbol.textContent = symbols[i % symbols.length];
+    symbol.style.left = Math.random() * 96 + "%";
+    symbol.style.fontSize = 14 + Math.random() * 26 + "px";
+    symbol.style.animationDuration = 12 + Math.random() * 16 + "s";
+    symbol.style.animationDelay = -Math.random() * 22 + "s";
+
+    symbolBox.appendChild(symbol);
+}
+
+const heroTyped = document.getElementById("heroTyped");
+const heroText = heroTyped.textContent.trim();
+let heroRun = 0;
+
+async function typeHero() {
+    const run = ++heroRun;
+
+    if (!motionOn) {
+        heroTyped.textContent = heroText;
+        return;
+    }
+
+    heroTyped.style.minHeight = heroTyped.offsetHeight + "px";
+    heroTyped.textContent = "";
+
+    const caret = document.createElement("span");
+    caret.className = "caret";
+
+    await sleep(900);
+
+    for (let i = 1; i <= heroText.length; i++) {
+        if (run !== heroRun || !motionOn) return;
+
+        heroTyped.textContent = heroText.slice(0, i);
+        heroTyped.appendChild(caret);
+        await sleep(38);
+    }
+
+    await sleep(1600);
+    if (run === heroRun) caret.remove();
+}
+
+const bgCanvas = document.getElementById("bgCanvas");
+const bgCtx = bgCanvas.getContext("2d");
+const mouse = { x: -999, y: -999 };
+let dots = [];
+let bgFrame = null;
+let width = 0;
+let height = 0;
+
+function sizeCanvas() {
+    const ratio = window.devicePixelRatio || 1;
+
+    width = window.innerWidth;
+    height = window.innerHeight;
+    bgCanvas.width = width * ratio;
+    bgCanvas.height = height * ratio;
+    bgCtx.setTransform(ratio, 0, 0, ratio, 0, 0);
+
+    const count = Math.min(75, Math.floor((width * height) / 20000));
+
+    dots = Array.from({ length: count }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        r: Math.random() * 1.6 + 0.7
+    }));
+}
+
+function drawBackground() {
+    bgCtx.clearRect(0, 0, width, height);
+
+    for (let i = 0; i < dots.length; i++) {
+        const dot = dots[i];
+
+        dot.x += dot.vx;
+        dot.y += dot.vy;
+
+        if (dot.x < 0 || dot.x > width) dot.vx *= -1;
+        if (dot.y < 0 || dot.y > height) dot.vy *= -1;
+
+        bgCtx.beginPath();
+        bgCtx.arc(dot.x, dot.y, dot.r, 0, Math.PI * 2);
+        bgCtx.fillStyle = "rgba(39, 201, 255, 0.75)";
+        bgCtx.fill();
+
+        for (let j = i + 1; j < dots.length; j++) {
+            const other = dots[j];
+            const distance = Math.hypot(dot.x - other.x, dot.y - other.y);
+
+            if (distance < 135) {
+                bgCtx.beginPath();
+                bgCtx.moveTo(dot.x, dot.y);
+                bgCtx.lineTo(other.x, other.y);
+                bgCtx.strokeStyle = "rgba(39, 201, 255, " + (0.2 * (1 - distance / 135)) + ")";
+                bgCtx.lineWidth = 1;
+                bgCtx.stroke();
+            }
+        }
+
+        const mouseDistance = Math.hypot(dot.x - mouse.x, dot.y - mouse.y);
+
+        if (mouseDistance < 170) {
+            bgCtx.beginPath();
+            bgCtx.moveTo(dot.x, dot.y);
+            bgCtx.lineTo(mouse.x, mouse.y);
+            bgCtx.strokeStyle = "rgba(141, 230, 255, " + (0.45 * (1 - mouseDistance / 170)) + ")";
+            bgCtx.stroke();
+        }
+    }
+
+    bgFrame = requestAnimationFrame(drawBackground);
+}
+
+function startBackground() {
+    if (bgFrame === null) {
+        sizeCanvas();
+        drawBackground();
+    }
+}
+
+function stopBackground() {
+    if (bgFrame !== null) {
+        cancelAnimationFrame(bgFrame);
+        bgFrame = null;
+    }
+
+    bgCtx.clearRect(0, 0, width, height);
+}
+
+window.addEventListener("resize", () => {
+    if (motionOn) sizeCanvas();
+});
+
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        if (bgFrame !== null) {
+            cancelAnimationFrame(bgFrame);
+            bgFrame = null;
+        }
+    } else if (motionOn) {
+        startBackground();
+    }
+});
+
+const glow = document.getElementById("cursorGlow");
+let glowX = 0, glowY = 0, targetX = 0, targetY = 0, glowFrame = null;
+
+function moveGlow() {
+    glowX += (targetX - glowX) * 0.14;
+    glowY += (targetY - glowY) * 0.14;
+    glow.style.transform = "translate(" + glowX + "px," + glowY + "px)";
+    glowFrame = requestAnimationFrame(moveGlow);
+}
+
+window.addEventListener("pointermove", event => {
+    mouse.x = event.clientX;
+    mouse.y = event.clientY;
+    targetX = event.clientX;
+    targetY = event.clientY;
+
+    if (motionOn) {
+        glow.classList.add("on");
+        if (glowFrame === null) moveGlow();
+    }
+});
+
+document.addEventListener("pointerleave", () => {
+    glow.classList.remove("on");
+    mouse.x = mouse.y = -999;
+});
+
+document.querySelectorAll(".glow-card").forEach(card => {
+    card.addEventListener("pointermove", event => {
+        const rect = card.getBoundingClientRect();
+        const x = (event.clientX - rect.left) / rect.width;
+        const y = (event.clientY - rect.top) / rect.height;
+
+        card.style.setProperty("--mx", x * 100 + "%");
+        card.style.setProperty("--my", y * 100 + "%");
+
+        if (motionOn && card.classList.contains("tilt")) {
+            card.style.transform =
+                "perspective(900px) rotateX(" + ((0.5 - y) * 10) + "deg) " +
+                "rotateY(" + ((x - 0.5) * 12) + "deg) translateY(-6px)";
+        }
+    });
+
+    card.addEventListener("pointerleave", () => {
+        card.style.transform = "";
+    });
+});
+
+document.querySelectorAll(".btn, .filter-btn, .topic, .nav-cta").forEach(element => {
+    element.addEventListener("click", event => {
+        if (!motionOn) return;
+
+        const rect = element.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const ripple = document.createElement("span");
+
+        ripple.className = "ripple";
+        ripple.style.width = ripple.style.height = size + "px";
+        ripple.style.left = event.clientX - rect.left - size / 2 + "px";
+        ripple.style.top = event.clientY - rect.top - size / 2 + "px";
+
+        element.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 650);
+    });
+});
+
+const navbar = document.getElementById("navbar");
+const progressBar = document.getElementById("progressBar");
+const toTop = document.getElementById("toTop");
+
+function onScroll() {
+    const top = window.scrollY;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+
+    progressBar.style.width = (max > 0 ? (top / max) * 100 : 0) + "%";
+    navbar.classList.toggle("scrolled", top > 40);
+    toTop.classList.toggle("show", top > 600);
+}
+
+window.addEventListener("scroll", onScroll, { passive: true });
+onScroll();
+
+toTop.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: motionOn ? "smooth" : "auto" });
+});
+
+const navLinks = document.querySelectorAll('.nav-links a[href^="#"]:not(.nav-cta)');
+
+const spyObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            navLinks.forEach(link => {
+                link.classList.toggle("active", link.getAttribute("href") === "#" + entry.target.id);
+            });
+        }
+    });
+}, { rootMargin: "-40% 0px -55% 0px" });
+
+["home", "students", "experience", "advice", "about"].forEach(id => {
+    const section = document.getElementById(id);
+    if (section) spyObserver.observe(section);
+});
+
+function applyMotion() {
+    rootEl.classList.toggle("no-motion", !motionOn);
+    motionBtn.textContent = "Animations: " + (motionOn ? "ON" : "OFF");
+    motionBtn.setAttribute("aria-pressed", String(motionOn));
+
+    if (motionOn) {
+        startBackground();
+    } else {
+        stopBackground();
+
+        if (glowFrame !== null) {
+            cancelAnimationFrame(glowFrame);
+            glowFrame = null;
+        }
+
+        document.querySelectorAll(".glow-card").forEach(card => {
+            card.style.transform = "";
+        });
+    }
+
+    typeHero();
+}
+
+motionBtn.addEventListener("click", () => {
+    motionOn = !motionOn;
+    applyMotion();
+});
+
+refreshPage();
+applyMotion();
+</script>
+
+</body>
+</html>
